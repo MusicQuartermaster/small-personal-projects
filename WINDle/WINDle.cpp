@@ -1,10 +1,8 @@
 #include <iostream>
 #include <string>
 #include <conio.h>
-#include <stdlib.h>
 #include <cstdlib>
 #include <windows.h>
-#include <unistd.h>
 #include "base64.h"
 
 int wordLength = 5;
@@ -62,6 +60,16 @@ void checkLetters(std::string word, std::string guess, int results[]){
                 guess[i] = '-';
             }
         }
+    }
+
+    // fill remaining slots (incorrect letters) - gray
+    for (int i = 0; i < guess.length(); i++) {
+        // if letter has already been checked, move on
+        if (guess.at(i) == '-') {
+            continue;
+        }
+        
+        results[i] = gray;
     }
 }
 
@@ -144,7 +152,7 @@ void playGame(){
 
     // user has 6 chances to guess the correct word
     for(int round = 1; round <= 6;){
-        std::cout << round << "/6: ";
+        std::cout << std::to_string(round) << "/6: ";
 
         // get a guess from the user and capitalize it
         std::string guess;
@@ -153,14 +161,14 @@ void playGame(){
 
         // if the guess is invalid, restart the round and get another guess from the user
         if(guess.length() != wordLength || !stringIsAlpha(guess)){
-            std::cout << "You must enter a " << wordLength << "-letter word\n";
+            std::cout << "You must enter a " << std::to_string(wordLength) << "-letter word\n";
             continue;
         }
 
         int colors[3] = {gray, yellow, green};
 
         // stores the color of each letter based on how close it is to the actual word
-        int guessResults[guess.length()] = {0};
+        int* guessResults = new int[guess.length()];
 
         /* populate the array with the correct color indicators:
          *
@@ -200,13 +208,13 @@ void playGame(){
 
 // takes a word of a specific, predefined length and prints out the corresponding base64 encoding
 void generateCode(){
-    std::cout << "\nEnter a " << wordLength << "-letter word:\n";
+    std::cout << "\nEnter a " << std::to_string(wordLength) << "-letter word:\n";
     std::string word;
     getline(std::cin,word,'\n');
 
     // make sure the user entered a valid string
     if(word.length() != wordLength){
-        std::cout << "\nYou must enter a " << wordLength << "-letter word\n\n";
+        std::cout << "\nYou must enter a " << std::to_string(wordLength) << "-letter word\n\n";
         return;
     }
 
@@ -266,16 +274,3 @@ int main(){
     menu();
     return 0;
 }
-
-// int main(){
-//     HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
-//   // you can loop k higher to see more color choices
-//   for(int k = 1; k < 255; k++)
-//   {
-//     // pick the colorattribute k you want
-//     SetConsoleTextAttribute(hConsole, k);
-//     std::cout << k << " I want to be nice today!" << std::endl;
-//   }
-//   int i;
-//   std::cin >> i;
-// }
