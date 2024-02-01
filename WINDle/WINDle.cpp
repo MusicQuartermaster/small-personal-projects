@@ -137,7 +137,7 @@ void playGame(){
     }
 
     // clear the screen to begin the game
-    system("cls");
+    std::cout << "\033[H\033[2J";
 
     // controls the text color in the console
     HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
